@@ -1,0 +1,709 @@
+@font-face {
+  font-family: 'Alstom';
+  src: url('Alstom.eot');
+  src: url('Alstom.eot?#iefix') format('embedded-opentype'),
+      url('Alstom.woff2') format('woff2'),
+      url('Alstom.woff') format('woff'),
+      url('Alstom.ttf') format('truetype'),
+      url('Alstom.svg#Alstom') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('WorkSans-Regular.eot');
+  src: url('WorkSans-Regular.eot?#iefix') format('embedded-opentype'),
+      url('WorkSans-Regular.woff2') format('woff2'),
+      url('WorkSans-Regular.woff') format('woff'),
+      url('WorkSans-Regular.ttf') format('truetype'),
+      url('WorkSans-Regular.svg#WorkSans-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+/* .js-plotly-plot .plotly .modebar {
+  padding-top: 5%;
+  margin-right: 3.5%;
+}  */
+
+/* overall layout  */
+body {
+  font-family: 'Work Sans';
+  background-color: #FFFFFF;
+  margin: 3%;
+  margin-top: 1%;
+  width: auto;
+  height: auto;
+}
+
+/* Set the current outer border to 0 because it's messed up,
+and put the FLATLY properties inside the DateInput_input class
+which works well instead. */
+/* .SingleDatePickerInput {
+  border: 0px;
+} */
+
+/* Fix box width of datepicker to be 100% of parent container*/
+/* .DateInput, .DateInput_1 {
+  width: 100%;
+} */
+
+/* Fix the font size and other stuff of datepicker*/
+.DateInput_input, .DateInput_input_1 {
+  text-align: center;
+  line-height: calc(1.5em + 0.75rem);
+  height: calc(1.5em + 0.75rem + 2px);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: #7b8a8b;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+
+/* logo */
+.logo {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  bottom: 0%;
+  height: 8vh;
+  width: 21vh;
+  border-radius: 0px;
+  padding-top: 0%;
+  padding-bottom: 1%;
+  padding-left: 0%;
+  margin-top: 0%;
+  margin-left: 0%;
+  }
+
+  
+/* .logo_position {
+  right: 0px;
+  top: 0px;
+  position: absolute;
+  padding-top: 0%;
+  padding-left: 0%;
+  margin-top: 0%;
+  margin-left: 0%;
+} */
+
+#logo_postion {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+}
+  
+/* to display divisions in a row */
+.row_display {
+ display : flex; 
+ flex-direction : row;
+ padding: 0px 0px;
+ justify-content: space-between;
+ width: auto;
+ height: auto;
+}
+
+/* to display divisions in columns */
+.column_display {
+  display : flex; 
+  flex-direction : column;
+  padding: 0px 0px;
+  justify-content: space-between;
+  width: auto;
+  height: auto;
+ }
+
+ /* to display elements in a container at the start */
+.start {
+  justify-content: start;
+}
+
+.end {
+  justify-content: right;
+}
+
+/* to display elements in a container in center */
+.center {
+  justify-content: center;
+}
+
+/* properties of a container */
+.container {
+  border-style: solid;
+  border-color: #D2F0E1;
+  padding: 1%;
+  margin-top: 2%;
+  margin-left: 0px;
+  width: auto;
+  height: auto;
+  size: 100%;
+}
+
+/* .mini_container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 3px;
+  border-color: #DC3223;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  margin: 1%;
+  padding: 1%;
+  box-shadow: #FFFFFF;
+  align-items: center;
+} */
+
+/* .mini_container {
+  border-radius: 5px;
+  background-color: #fcecec;
+  margin: 10px 10px;
+  padding: 0px 0px;
+  align-items: space-around;
+  text-align: center;
+  justify-content: center;
+  box-shadow: 2px 2px 2px lightgrey;
+} */
+
+/* .card {
+  background-color: #4B5A69;
+} */
+/* 
+.card-text {
+  color: #73CDAA;
+} */
+
+.CardHeader {
+  font-family: 'Alstom';
+  font-size: 30px;
+}
+
+
+.mini_container {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
+
+.mini_container_label {
+  font-weight: bold;
+  align-items: space-around;
+  text-align: center;
+  justify-content: center;
+}
+
+/* to apply spacing in between containers */
+.container_space {
+  margin-left: 1%;
+}
+
+/* navigation bar properties */
+.section_style {
+  font-weight: bold;
+  border-bottom: 0px;
+}
+
+.card-title {
+  color: #DC3223;
+  font-size: 25px;
+  margin: 0%;
+  padding: 0%;
+  font-weight: bold;
+}
+
+.card-text {   
+  font-family: "Alstom";
+  color: #1E3246;
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 5px;: 
+}
+
+/* main heading properties */
+H2 {
+  font-family: "Alstom";
+  color: #1E3246;
+  font-size: 30px;
+  padding-top: 2%;
+}
+
+H3 {
+  font-family: "Work Sans";
+  color: #DC3223;
+  font-size: 24px;
+}
+
+/* secondary heading properties */
+H4 {
+  font-family: "Alstom";
+  color: #1E3246;
+  font-size: 18px;
+  margin: 0%;
+  padding: 0%;
+  font-weight: bold;
+}
+
+H6 {
+  font-family: "Work Sans";
+  color: #DC3223;
+  font-size: 15px;
+}
+
+/* information properties */
+P {
+  font-family: "Work Sans";
+  color: #1E3246;
+  font-weight: bold;
+  margin: 0%;
+  padding: 0%;
+}
+
+.small_container {
+  font-size: 15px;
+  padding-bottom: 2px;
+}
+
+/* radio button style */
+.radio_styling {
+  color: #1E3246;
+  font-weight: bold;
+}
+
+/* .main_heading {
+
+
+} */
+/* 
+body {
+  background-color: #FFFFFF;
+  margin: 25px;
+  margin-right: 25px;
+  font-family: 'Work Sans';
+} */
+
+
+/* .heading {
+font-family: "Alstom";
+padding-top: 2%;
+padding-bottom: 0%;
+color: #1E3246;
+font-size: 30px;
+} */
+/* left: 0px;
+position: absolute; */ 
+
+
+/* .sub_heading {
+font-family: "Alstom";
+padding-top: 2%;
+padding-bottom: 1%;
+font-size: 18px;
+font-weight: bold;
+color: #1E3246;
+}
+
+.sub_heading_info {
+font-family: "Alstom";
+padding-top: 2%;
+padding-bottom: 0%;
+font-size: 20px;
+color: #DC3223;
+}
+
+.sub_heading_filter {
+  font-family: "Alstom";
+  font-size: 20px;
+  padding-top: 1%;
+  margin-left: 25px;
+  color: #DC3223;
+}
+
+.information {
+font-family: 'Work Sans';
+font-size: 15px;
+color: #1E3246;
+}
+
+.button_styling {
+  font-family: 'Work Sans';
+  font-weight: bold;
+}
+
+.key_figure {
+font-family: 'Work Sans';
+font-size: 30px;
+color: #DC3223;
+}
+
+.key_figure_label {
+  font-family: 'Work Sans';
+  color: #1E3246;
+  font-size: 15px;
+} */
+
+/* .tab_styling {
+font-family: 'Work Sans';
+/* font-size: 15px;
+font-weight: bold; 
+} */
+
+/* .radio_styling {
+  color: #1E3246;
+}
+
+.dropdown {
+display: inline-block;
+width: 100%;
+padding-top: 0px;
+}
+
+
+
+.slider_style {
+  width : 30%
+} */
+
+
+/* .tab_position {
+
+
+} */
+
+/* .pretty_container {
+  border-radius: 0px;
+  background-color:#FFFFFF;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  box-shadow: #FFFFFF;
+  height : 70%;
+  width : 20%;
+} */
+/* .highlights {
+  font-family: "Work Sans";
+  font-size: 20px;
+} */
+
+/* .pretty_container_filter {
+  display: inline-block; 
+  border: 1px solid #FFFFFF;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 25px;
+  width: 20%;
+  height: auto;
+} */
+
+/* .pretty_container { */
+  /* display: flex; */
+  /* border: 2px solid #EBE6DC;
+  border-radius: 7px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: auto;
+  height: auto;
+} */
+
+/* .mini_container { */
+  /* display: flex; */
+  /* border-radius: 2px;
+  border-color: #DC3223;
+  background-color: #ffffff;
+  margin: 0px;
+  padding: 0px;
+  box-shadow: #FFFFFF;
+  align-content: center;
+  text-align: center;
+  justify-content: center;
+}  */
+
+/* .container_highlight {
+  font-family: "Work Sans";
+  color: #1E3246;
+  font-size: 15px;
+  font-weight: bold;
+} */
+/* 
+.container_label {
+  font-family: "Alstom";
+  color: #DC3223;
+  font-size: 15px;
+}
+
+.container-display {
+  display: flex;
+}
+
+.column {
+  margin-left: 0.5%;
+  display : flex;
+  flex-direction : row
+} */
+
+/* .two.columns {
+  width: 16.25%;
+}
+
+.column,
+.columns {
+  margin-left: 0.5%;
+}
+
+
+
+.bare_container {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.dcc_control {
+  margin: 0;
+  padding: 5px;
+  width: calc(100%-40px);
+}
+
+.control_label {
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  width: calc(100%-40px);
+}
+
+.rc-slider {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+.flex-display {
+  display: flex;
+}
+
+.container-display {
+  display: flex;
+}
+
+#individual_graph,
+#aggregate_graph {
+  width: calc(100% - 30px);
+  position: absolute;
+}
+
+#count_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+
+#countGraphContainer {
+  flex: 5;
+  position: relative;
+}
+
+#header {
+  align-items: center;
+}
+
+#learn-more-button {
+  text-align: center;
+  height: 100%;
+  padding: 0 20px;
+  text-transform: none;
+  font-size: 15px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 30px;
+}
+#title {
+  text-align: center;
+}
+
+.mini_container {
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin: 10px;
+  padding: 15px;
+  position: relative;
+  box-shadow: 2px 2px 2px lightgrey;
+}
+
+.custom-tabs-container {
+  width: 85%;
+}
+.custom-tabs {
+  border-top-left-radius: 3px;
+  background-color: #f9f9f9;
+  padding: 0px 24px;
+  border-bottom: 1px solid #d6d6d6;
+}
+
+.custom-tab {
+  color:#586069;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-top: 3px solid transparent !important;
+  border-left: 0px !important;
+  border-right: 0px !important;
+  border-bottom: 0px !important;
+  background-color: #fafbfc;
+  padding: 12px !important;
+  font-family: "system-ui";
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.custom-tab--selected {
+  color: black;
+  box-shadow: 1px 1px 0px white;
+  border-left: 1px solid lightgrey !important;
+  border-right: 1px solid lightgrey !important;
+  border-top: 3px solid #e36209 !important;
+}
+
+#right-column {
+  display: flex;
+  flex-direction: column;
+}
+
+#wells {
+  flex: 1;
+}
+
+#gas {
+  flex: 1;
+}
+
+#aggregate_data {
+  align-items: center;
+}
+
+#oil {
+  flex: 1;
+}
+
+#water {
+  flex: 1;
+}
+
+#tripleContainer {
+  display: flex;
+  flex: 3;
+}
+
+#mainContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+#pie_graph > div > div > svg:nth-child(3) > g.infolayer > g.legend {
+  pointer-events: all;
+  transform: translate(30px, 349px);
+} */
+
+#sidebar {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: #f8f9fa;
+}
+
+#sidebar h2 {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+/* Hide the blurb on a small screen */
+#blurb {
+  display: none;
+}
+
+#sidebar-toggle {
+  display: none;
+}
+
+#collapse *:first-child {
+  margin-top: 1rem;
+}
+
+/* add the three horizontal bars icon for the toggle */
+.navbar-toggler-icon {
+  background-image: url("radioscopy_logo.svg");
+}
+
+#page-content {
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 48em) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20rem;
+    text-align: left;
+    transition: margin 0.3s ease-in-out, padding 0.3s ease-in-out;
+  }
+
+  #sidebar-toggle {
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transition: top 0.3s ease-in-out;
+  }
+
+  /* add negative margin to sidebar to achieve the collapse */
+  #sidebar.collapsed {
+    margin-left: -15.5rem;
+    padding-right: 0.5rem;
+  }
+
+  /* move the sidebar toggle up to the top left corner */
+  #sidebar.collapsed #sidebar-toggle {
+    top: -2rem;
+  }
+
+  /* also adjust margin of page content */
+  #sidebar.collapsed ~ #page-content {
+    margin-left: 1.5rem;
+  }
+
+  /* move all contents of navbar other than header (containing toggle) further
+     off-screen */
+  #sidebar.collapsed > *:not(:first-child) {
+    margin-left: -6rem;
+    margin-right: 6rem;
+  }
+
+  /* reveal the blurb on a large screen */
+  #blurb {
+    display: block;
+  }
+
+  /* Hide the toggle on a large screen */
+  #navbar-toggle {
+    display: none;
+  }
+
+  #collapse {
+    display: block;
+  }
+
+  /* set margins of the main content so that it doesn't overlap the sidebar */
+  #page-content {
+    margin-left: 22rem;
+    margin-right: 2rem;
+    transition: margin-left 0.3s ease-in-out;
+  }
+}

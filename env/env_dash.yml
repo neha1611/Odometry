@@ -1,0 +1,10 @@
+name: env_dash
+dependencies:
+    - python 3.9.1
+    - pip
+    - pip:
+        - numpy==1.20.1
+        - pandas==1.2.2
+        - plotly==4.14.3
+        - dash==1.19.0
+	- dash_daq
