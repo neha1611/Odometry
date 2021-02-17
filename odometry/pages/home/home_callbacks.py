@@ -15,9 +15,9 @@ from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime, Fine
     Input(component_id='intermediate-value', component_property='children')
 )
 def update_dp(train_val, hiden):
-    temp = TrainMinDataFrame.query('Train_Id == @train_val')
+    temp = TrainMinDataFrame.query('TrainId == @train_val')
     temp = temp.reset_index()
-    listTime = temp['Time_Stamp']
+    listTime = temp['TimeStamp']
     data = json.loads(hiden)
     data['train_id_val']=train_val
     data['time_val']=listTime[0]
@@ -29,10 +29,13 @@ def update_dp(train_val, hiden):
 @app.callback(
     Output(component_id='my_map', component_property='figure'),
     [Input(component_id='slct_train', component_property='value'),
-    Input(component_id='slct_time', component_property='value')]
+    Input(component_id='slct_time', component_property='value'),
+    Input(component_id='rd_axle', component_property='value')]
 )
-def update_graph(train_val, time_val):
-    temp = TrainMinDataFrame.query('Train_Id==@train_val & Time_Stamp==@time_val')
+def update_graph(train_val, time_val, axle_event_lbl):
+    print(eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent'])
+    print("axle Evelent value"+axle_event_lbl)
+    temp = TrainMinDataFrame.query('TrainId==@train_val & TimeStamp==@time_val')
     print(train_val, time_val)
     print(temp)
     trainMinIdx_val = temp['TrainMinIdx'].values[0]
@@ -42,21 +45,21 @@ def update_graph(train_val, time_val):
     
     trace0=go.Scatter(
          x=t.Seconds,
-         y=t.left_axle,
+         y=t.LeftAxleSpeed,
          mode='lines',
-         name='left_axle'
+         name='LeftAxleSpeed'
          )
     trace1=go.Scatter(
          x=t.Seconds,
-         y=t.right_axle,
+         y=t.RightAxleSpeed,
          mode='lines',
-         name='right_axle'
+         name='RightAxleSpeed'
          )
     trace2=go.Scatter(
          x=t.Seconds,
-         y=t.Odo_speed,
+         y=t.OdoSpeed,
          mode='lines',
-         name='Odo_speed'
+         name='OdoSpeed'
          )
     data = [trace0, trace1, trace2]
 
@@ -68,6 +71,9 @@ def update_graph(train_val, time_val):
     [
     Output(component_id="slct_time", component_property="value"),
     Output(component_id="slct_train", component_property="value"),
+    Output(component_id="rd_axle", component_property="value"),
+    Output(component_id="rd_algo", component_property="value"),
+    Output(component_id="rd_speed", component_property="value"),
     Output(component_id="divAnomalyIndex", component_property="children")
     ],
     [Input('sbmt_lbl_btn', 'n_clicks_timestamp'),
@@ -85,7 +91,7 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
     data = json.loads(vars)
     temp = data['anomalyIndex']
     print(temp)
-    retTrain=eval('TrainMinDataFrame.iloc[{}]'.format(temp))['Train_Id']
+    retTrain=eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
     print(retTrain)
     btn_clicked = ''
     max_val = max(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, prevBtn_clicks, nextBtn_clicks)
@@ -93,16 +99,16 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
         btn_clicked = 'sbmt'
     elif nxtAnm_clicks==max_val:
         temp = temp+1
-        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['Time_Stamp']
-        retTrain =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['Train_Id']
+        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TimeStamp']
+        retTrain =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
         btn_clicked = 'sbmtNxt'
     elif prevAnm_clicks==max_val:
         print(temp)
         temp=temp-1
         print(temp)
         btn_clicked = 'skp'
-        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['Time_Stamp']
-        retTrain = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['Train_Id']
+        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TimeStamp']
+        retTrain = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
     elif prevBtn_clicks==max_val:
         dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
         dt = dt - datetime.timedelta(minutes=1)
@@ -115,7 +121,11 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
         btn_clicked = 'nxt'
     else:
         btn_clicked = 'None'
+    retAxleEvent = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblAxleEvent']
+    retOdoAlgo = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblOdoAlgo']
+    retSpeed = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblSpeed']
+    
     data['anomalyIndex']=temp
     jsret = json.dumps(data)
-    print(retTime, retTrain, jsret)
-    return retTime,retTrain,jsret
+    print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed)
+    return retTime,retTrain,jsret, retAxleEvent, retOdoAlgo, retSpeed

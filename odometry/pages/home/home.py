@@ -33,7 +33,7 @@ layout = html.Div(
                                     ],
                                     multi=False,
                                     # placeholder='Filter by Train ID...',
-                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['Train_Id']
+                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TrainId']
                                     )
                                 )
                             ]),
@@ -48,7 +48,7 @@ layout = html.Div(
                                     ],
                                     multi=False,
                                     # placeholder='Filter by Time...',
-                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['Time_Stamp']
+                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TimeStamp']
                                     )
                                 )
                             ])
@@ -73,7 +73,7 @@ layout = html.Div(
                                                             {'label': 'Unlikely', 'value': 'Unlikely'},
                                                             {'label': 'Maybe', 'value': 'Maybe'}
                                                             ],
-                                                            value='Likely', inline=True
+                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent']#, inline=True
                                                         )
                                                     )
                                                 ])
@@ -93,7 +93,7 @@ layout = html.Div(
                                                         {'label': 'Unlikely', 'value': 'Unlikely'},
                                                         {'label': 'Maybe', 'value': 'Maybe'}
                                                         ],
-                                                        value='Maybe', inline=True
+                                                        value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblOdoAlgo']#, inline=True
                                                         )
                                                     )
                                                 ])
@@ -109,11 +109,11 @@ layout = html.Div(
                                                 dbc.Col(
                                                         dbc.RadioItems( id="rd_speed",
                                                             options=[
-                                                            {'label': 'Possible Under Estimation', 'value': 'Possible Underestimation'},
-                                                            {'label': 'Possible Over Estimation', 'value': 'Possible Over Estimation'},
+                                                            {'label': 'Possible Under Estimation', 'value': 'PosUnder'},
+                                                            {'label': 'Possible Over Estimation', 'value': 'PosOver'},
                                                             {'label': 'OK', 'value': 'OK'}
                                                             ],
-                                                            value='OK', inline=True
+                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblSpeed']#, inline=True
                                                             )
                                                     )
                                                 ])

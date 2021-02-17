@@ -10,7 +10,7 @@ from settings import config
 
 logo_postion =  html.Div(
                     [
-                        html.Img(src=app.get_asset_url("images/logo.jpg"), className = 'logo')
+                        html.Img(src=app.get_asset_url("images/Odometry_Logo_2.png"), className = 'logo')
                     ]
                 )
 

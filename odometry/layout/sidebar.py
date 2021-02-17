@@ -10,7 +10,7 @@ sidebar_header = dbc.Row([
                     dbc.Col([
                         html.Button(
                             html.Span(
-                                html.Img(src=app.get_asset_url("images/radioscopy_logo.svg"), 
+                                html.Img(src=app.get_asset_url("images/Odometry_Logo_1.png"), 
                                     style = {'height' : '40px' , 'width' : '40px'})
                                 ),
                                 className="navbar-toggler",
@@ -19,7 +19,7 @@ sidebar_header = dbc.Row([
                             ),
                             html.Button(
                                 html.Span(
-                                    html.Img(src=app.get_asset_url("images/radioscopy_logo.svg"), 
+                                    html.Img(src=app.get_asset_url("images/Odometry_Logo_1.png"), 
                                         style = {'height' : '40px' , 'width' : '40px'})
                                     ),
                                     className="navbar-toggler",
