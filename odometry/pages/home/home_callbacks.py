@@ -29,12 +29,10 @@ def update_dp(train_val, hiden):
 @app.callback(
     Output(component_id='my_map', component_property='figure'),
     [Input(component_id='slct_train', component_property='value'),
-    Input(component_id='slct_time', component_property='value'),
-    Input(component_id='rd_axle', component_property='value')]
+    Input(component_id='slct_time', component_property='value')]
 )
-def update_graph(train_val, time_val, axle_event_lbl):
+def update_graph(train_val, time_val):
     print(eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent'])
-    print("axle Evelent value"+axle_event_lbl)
     temp = TrainMinDataFrame.query('TrainId==@train_val & TimeStamp==@time_val')
     print(train_val, time_val)
     print(temp)
@@ -63,18 +61,18 @@ def update_graph(train_val, time_val, axle_event_lbl):
          )
     data = [trace0, trace1, trace2]
 
-    layout = go.Layout(title = 'Left and Right Axle Graph')
+    layout = go.Layout()#title = 'Left and Right Axle Graph')
     figure= go.Figure(data=data, layout=layout)    
     return figure
 
 @app.callback(
     [
-    Output(component_id="slct_time", component_property="value"),
-    Output(component_id="slct_train", component_property="value"),
-    Output(component_id="rd_axle", component_property="value"),
+    Output("slct_time", "value"),
+    Output("slct_train", "value"),
+    Output("divAnomalyIndex", "children"),
+    Output("rd_axle", "value"),
     Output(component_id="rd_algo", component_property="value"),
-    Output(component_id="rd_speed", component_property="value"),
-    Output(component_id="divAnomalyIndex", component_property="children")
+    Output(component_id="rd_speed", component_property="value")
     ],
     [Input('sbmt_lbl_btn', 'n_clicks_timestamp'),
      Input('prev_btn', 'n_clicks_timestamp'),
@@ -86,8 +84,9 @@ def update_graph(train_val, time_val, axle_event_lbl):
 )
 def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, 
     prevBtn_clicks, nextBtn_clicks, time_val, vars):
+    # print("axle val "+str(axle_val))
     retTime = time_val
-    print(vars)
+    print("anomaly index "+str(vars))
     data = json.loads(vars)
     temp = data['anomalyIndex']
     print(temp)
@@ -118,13 +117,15 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
         dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
         dt = dt + datetime.timedelta(minutes=1)
         retTime = dt.strftime("%d-%m-%Y:%H:%M")
+        print("abc")
         btn_clicked = 'nxt'
     else:
         btn_clicked = 'None'
+        print("assdf")
     retAxleEvent = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblAxleEvent']
     retOdoAlgo = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblOdoAlgo']
     retSpeed = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblSpeed']
-    
+    print("ewwer")
     data['anomalyIndex']=temp
     jsret = json.dumps(data)
     print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed)

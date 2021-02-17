@@ -53,12 +53,14 @@ layout = html.Div(
                                 )
                             ])
                          ]),
-                        dbc.Row([
+                        dbc.Row(
                             dbc.Col(
                                 html.Div(
                                     dcc.Graph(id='my_map', figure={})
                                     )
-                                ),
+                                )
+                            ),
+                        dbc.Row([
                             dbc.Col([
                                 dbc.Row(
                                     dbc.Col(
@@ -73,7 +75,8 @@ layout = html.Div(
                                                             {'label': 'Unlikely', 'value': 'Unlikely'},
                                                             {'label': 'Maybe', 'value': 'Maybe'}
                                                             ],
-                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent']#, inline=True
+                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent']
+                                                            , inline=True
                                                         )
                                                     )
                                                 ])
@@ -90,10 +93,11 @@ layout = html.Div(
                                                     dbc.RadioItems( id="rd_algo",
                                                         options=[
                                                         {'label': 'Likely', 'value': 'Likely'},
-                                                        {'label': 'Unlikely', 'value': 'Unlikely'},
+                                                        {'label': 'UnLikely', 'value': 'UnLikely'},
                                                         {'label': 'Maybe', 'value': 'Maybe'}
                                                         ],
-                                                        value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblOdoAlgo']#, inline=True
+                                                        value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblOdoAlgo']
+                                                        , inline=True
                                                         )
                                                     )
                                                 ])
@@ -109,11 +113,12 @@ layout = html.Div(
                                                 dbc.Col(
                                                         dbc.RadioItems( id="rd_speed",
                                                             options=[
-                                                            {'label': 'Possible Under Estimation', 'value': 'PosUnder'},
-                                                            {'label': 'Possible Over Estimation', 'value': 'PosOver'},
+                                                            {'label': 'Possible Under Estimation', 'value': 'PossUnder'},
+                                                            {'label': 'Possible Over Estimation', 'value': 'PossOver'},
                                                             {'label': 'OK', 'value': 'OK'}
                                                             ],
-                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblSpeed']#, inline=True
+                                                            value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblSpeed']
+                                                            , inline=True
                                                             )
                                                     )
                                                 ])
