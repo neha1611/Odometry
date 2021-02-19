@@ -5,7 +5,7 @@ CREATE TABLE odometry.tbl_train_min_data
     train_id integer NOT NULL,
     time_stamp varchar(20) NOT NULL,
     anomaly_score numeric NOT NULL,
-    expert_comment varchar[250],
+    expert_comment varchar,
     class_axle_event VARCHAR(10),
     probability_axle_event numeric,
     class_odo_algo VARCHAR(10),

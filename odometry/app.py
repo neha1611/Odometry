@@ -3,6 +3,8 @@ import sqlalchemy
 import dash_bootstrap_components as dbc
 import cdata
 from settings.config import *
+
+from sqlalchemy.orm import sessionmaker
 # import cdata
 
 app = dash.Dash(__name__,
@@ -14,9 +16,10 @@ app.title = name
 
 dburl = 'postgresql://'+PGUSER+':'+PGPASSWORD+'@'+PGHOST+'/'+PGDATABASE
 engine = sqlalchemy.create_engine(dburl)#'postgresql://scott:tiger@localhost/mydatabase')
-# dbConn = psycopg2.connect(user="postgres",
-# 					password="admin",
-# 					database="postgres",
-# 					host="127.0.0.1")
+# dbConn = psycopg2.connect(user=PGUSER,
+# 					password=PGPASSWORD,
+# 					database=PGDATABASE,
+# 					host=PGHOST)
 
+metadata = sqlalchemy.MetaData(schema="odometry")
 server = app.server

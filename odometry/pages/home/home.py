@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 
-import plotly.express as px  
+import plotly.express as px 
+import dash_table 
 import plotly.graph_objects as go
 import dash_html_components as html
 import dash_core_components as dcc
@@ -52,13 +53,21 @@ layout = html.Div(
                                     )
                                 )
                             ])
-                         ]),
-                        dbc.Row(
+                         ]
+                         ),
+                        dbc.Row([
+                            dbc.Col(dbc.Button("<",id="btn_prev_anm", 
+                                color="primary", n_clicks_timestamp=0), width=1,
+                                align="center", className="h-50"),
                             dbc.Col(
                                 html.Div(
                                     dcc.Graph(id='my_map', figure={})
-                                    )
-                                )
+                                    ) ,width=10
+                                ),
+                            dbc.Col(dbc.Button(">",id="btn_nxt_anm", 
+                                color="primary", n_clicks_timestamp=0), width=1,
+                                align="center", className="h-50")
+                            ]
                             ),
                         dbc.Row([
                             dbc.Col([
@@ -130,7 +139,8 @@ layout = html.Div(
                                         html.Div(
                                             [
                                             dbc.Label(html.P("Expert Comment")),
-                                            dbc.Input(id="expt_cmt", placeholder="Expert Comment", type="text")
+                                            dbc.Input(id="expert_comment", placeholder="Expert Comments", 
+                                                type="text", value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['ExpertComment'])
                                             ])
                                         )
                                     ),
@@ -148,22 +158,35 @@ layout = html.Div(
                                                     children='sbmtLbl:0 sbmtLbLNxt:0 skp:0 prev:0 nxt:0 last:nan', 
                                                     style={'display': 'none'}),
                                             html.Div(id="divAnomalyIndex", style={'display':'none'},
-                                                children="{\"anomalyIndex\":0}")
+                                                children="{\"anomalyIndex\":0,\"indexVal\":0}")
                                             ])
                                         )
                                     ),
-                                dbc.Row(
+                                dbc.Row([
                                     dbc.Col(
                                         html.Div(
-                                            [
-                                            html.Br(),
-                                            dbc.ButtonGroup(
-                                                [dbc.Button("Previous Anomaly",id="btn_prev_anm", color="primary", n_clicks_timestamp=0), 
-                                                dbc.Button("Next Anomaly",id="btn_nxt_anm", color="primary", n_clicks_timestamp=0)]
+                                            dash_table.DataTable(id='table',
+                                                columns=[{'name': i, 'id': i} for i in TrainMinDataFrame.loc[:,['TrainId','TimeStamp','AnomalyScore','LblAxleEvent','LblOdoAlgo','LblSpeed']]],
+                                                # columns=[{"name": i, "id": i} 
+                                                #     for i in [TrainMinDataFrame.columns
+                                                data=TrainMinDataFrame.to_dict('records'),
+                                                page_action='none',
+                                                fixed_rows={'headers': True},
+                                                style_table={'height': '300px', 'overflowY': 'auto'}
                                                 )
-                                            ])
+                                            )
+                                        ),
+                                    dbc.Col(
+                                        # html.Div(
+                                        #     [
+                                        #     html.Br(),
+                                        #     dbc.ButtonGroup(
+                                        #         [, 
+                                        #         dbc.Button("Next Anomaly",id="btn_nxt_anm", color="primary", n_clicks_timestamp=0)]
+                                        #         )
+                                        #     ])
                                         )
-                                    )
+                                    ])
                                 ])
                         ])
                     ])

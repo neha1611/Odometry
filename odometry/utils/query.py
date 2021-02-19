@@ -10,7 +10,11 @@ train_id \"TrainId\",
 time_stamp \"TimeStamp\", 
 anomaly_score \"AnomalyScore\",
 expert_comment \"ExpertComment\", 
-class_axle_event \"LblAxleEvent\", 
+class_axle_event \"LblAxleEvent\",
+probability_axle_event, 
 class_odo_algo \"LblOdoAlgo\",  
-class_speed \"LblSpeed\" 
+probability_odo_algo,
+class_speed \"LblSpeed\" ,
+probability_speed 
 from odometry.tbl_train_min_data order by anomaly_Score desc"""
+

@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from utils.functions import *
 from dash.dependencies import Input, Output, State
 from app import app
-from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime, FineSpeedDataFrame
+from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime, FineSpeedDataFrame, updateTrainData
 
 @app.callback(
     [Output(component_id='slct_time', component_property='options'),
@@ -32,12 +32,9 @@ def update_dp(train_val, hiden):
     Input(component_id='slct_time', component_property='value')]
 )
 def update_graph(train_val, time_val):
-    print(eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent'])
     temp = TrainMinDataFrame.query('TrainId==@train_val & TimeStamp==@time_val')
-    print(train_val, time_val)
-    print(temp)
+    # print("temp"+str(temp))
     trainMinIdx_val = temp['TrainMinIdx'].values[0]
-    print(trainMinIdx_val)
     t = FineSpeedDataFrame.query('TrainMinIdx==@trainMinIdx_val')
     t = t.reset_index()
     
@@ -71,62 +68,79 @@ def update_graph(train_val, time_val):
     Output("slct_train", "value"),
     Output("divAnomalyIndex", "children"),
     Output("rd_axle", "value"),
-    Output(component_id="rd_algo", component_property="value"),
-    Output(component_id="rd_speed", component_property="value")
+    Output("rd_algo", "value"),
+    Output("rd_speed", "value"),
+    Output("expert_comment", "value")
     ],
     [Input('sbmt_lbl_btn', 'n_clicks_timestamp'),
      Input('prev_btn', 'n_clicks_timestamp'),
      Input('nxt_btn', 'n_clicks_timestamp'),
      Input('btn_prev_anm', 'n_clicks_timestamp'),
      Input('btn_nxt_anm', 'n_clicks_timestamp')],
-     [State(component_id="slct_time", component_property="value"),
+     [State("rd_axle", "value"),
+     State("rd_algo", "value"),
+     State("rd_speed", "value"),
+     State("expert_comment", "value"),
+     State(component_id="slct_time", component_property="value"),
      State(component_id="divAnomalyIndex", component_property="children")]
 )
 def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, 
-    prevBtn_clicks, nextBtn_clicks, time_val, vars):
-    # print("axle val "+str(axle_val))
+    prevBtn_clicks, nextBtn_clicks, lblAxl, lblOdo, lblSpd, exptCmt, time_val, vars):
     retTime = time_val
-    print("anomaly index "+str(vars))
     data = json.loads(vars)
-    temp = data['anomalyIndex']
-    print(temp)
-    retTrain=eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
-    print(retTrain)
+    anomalyIndex = data['anomalyIndex']
+    indexVal = data['indexVal']
+    retTrain=TrainMinDataFrame.at[anomalyIndex,'TrainId']
     btn_clicked = ''
     max_val = max(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, prevBtn_clicks, nextBtn_clicks)
-    if sbmtBtn_clicks==max_val:
-        btn_clicked = 'sbmt'
-    elif nxtAnm_clicks==max_val:
-        temp = temp+1
-        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TimeStamp']
-        retTrain =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
-        btn_clicked = 'sbmtNxt'
-    elif prevAnm_clicks==max_val:
-        print(temp)
-        temp=temp-1
-        print(temp)
-        btn_clicked = 'skp'
-        retTime =eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TimeStamp']
-        retTrain = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['TrainId']
-    elif prevBtn_clicks==max_val:
-        dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
-        dt = dt - datetime.timedelta(minutes=1)
-        retTime = dt.strftime("%d-%m-%Y:%H:%M")
-        btn_clicked = 'prev'
-    elif nextBtn_clicks==max_val:
-        dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
-        dt = dt + datetime.timedelta(minutes=1)
-        retTime = dt.strftime("%d-%m-%Y:%H:%M")
-        print("abc")
-        btn_clicked = 'nxt'
-    else:
-        btn_clicked = 'None'
-        print("assdf")
-    retAxleEvent = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblAxleEvent']
-    retOdoAlgo = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblOdoAlgo']
-    retSpeed = eval('TrainMinDataFrame.iloc[{}]'.format(temp))['LblSpeed']
-    print("ewwer")
-    data['anomalyIndex']=temp
+    if (max_val>0):
+        if sbmtBtn_clicks==max_val:
+            btn_clicked = 'sbmt'
+            TrainMinDataFrame.at[indexVal,'LblAxleEvent']=lblAxl
+            TrainMinDataFrame.at[indexVal,'LblOdoAlgo']=lblOdo
+            TrainMinDataFrame.at[indexVal,'LblSpeed']=lblSpd
+            TrainMinDataFrame.at[indexVal,'ExpertComment']=exptCmt
+            currentDF = eval('TrainMinDataFrame.iloc[{}]'.format(indexVal))
+            updateTrainData(currentDF)
+        elif nxtAnm_clicks==max_val:
+            anomalyIndex = anomalyIndex+1
+            indexVal = anomalyIndex
+            btn_clicked = 'sbmtNxt'
+        elif prevAnm_clicks==max_val:
+            anomalyIndex=anomalyIndex-1
+            indexVal = anomalyIndex
+            btn_clicked = 'skp'
+        elif prevBtn_clicks==max_val:
+            trainMinIdx = TrainMinDataFrame.at[indexVal,'TrainMinIdx']
+            trainMinIdx = trainMinIdx-1
+            indexVal = TrainMinDataFrame.index[TrainMinDataFrame['TrainMinIdx']==trainMinIdx][0]
+            # retTime = TrainMinDataFrame.at[indexVal,'TimeStamp']
+            # retTrain = TrainMinDataFrame.at[indexVal,'TrainId']
+            # dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
+            # dt = dt - datetime.timedelta(minutes=1)
+            # retTime = dt.strftime("%d-%m-%Y:%H:%M")
+            btn_clicked = 'prev'
+        elif nextBtn_clicks==max_val:
+            trainMinIdx = TrainMinDataFrame.at[indexVal,'TrainMinIdx']
+            trainMinIdx = trainMinIdx+1
+            indexVal = TrainMinDataFrame.index[TrainMinDataFrame['TrainMinIdx']==trainMinIdx][0]
+            # retTime = TrainMinDataFrame.at[indexVal,'TimeStamp']
+            # retTrain = TrainMinDataFrame.at[indexVal,'TrainId']
+            # dt = pd.to_datetime(time_val, format="%d-%m-%Y:%H:%M")
+            # dt = dt + datetime.timedelta(minutes=1)
+            # retTime = dt.strftime("%d-%m-%Y:%H:%M")
+            btn_clicked = 'nxt'
+        else:
+            btn_clicked = 'None'
+    retTime = TrainMinDataFrame.at[indexVal,'TimeStamp']
+    retTrain = TrainMinDataFrame.at[indexVal,'TrainId']
+    retAxleEvent = TrainMinDataFrame.at[indexVal,'LblAxleEvent']
+    retOdoAlgo = TrainMinDataFrame.at[indexVal,'LblOdoAlgo']
+    retSpeed = TrainMinDataFrame.at[indexVal,'LblSpeed']
+    retExpertComment = TrainMinDataFrame.at[indexVal,'ExpertComment']
+    data['anomalyIndex']=int(anomalyIndex)
+    data['indexVal']=int(indexVal)
+    # print(data)
     jsret = json.dumps(data)
-    print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed)
-    return retTime,retTrain,jsret, retAxleEvent, retOdoAlgo, retSpeed
+    # print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
+    return retTime,retTrain,jsret, retAxleEvent, retOdoAlgo, retSpeed, retExpertComment
