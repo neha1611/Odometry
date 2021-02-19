@@ -2,28 +2,37 @@ import json, datetime
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-
+import pages.home.home_data as hd
 from utils.functions import *
 from dash.dependencies import Input, Output, State
 from app import app
-from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime, FineSpeedDataFrame, updateTrainData
+from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime, FineSpeedDataFrame
+from pages.home.home_data import updateTrainData
 
 @app.callback(
     [Output(component_id='slct_time', component_property='options'),
-    Output(component_id='intermediate-value', component_property='children')],
+    Output(component_id='intermediate-value', component_property='children'),
+    Output(component_id='lbl1', component_property='children'),
+    Output(component_id='lbl2', component_property='children')],
     Input(component_id='slct_train', component_property='value'),
     Input(component_id='intermediate-value', component_property='children')
 )
 def update_dp(train_val, hiden):
-    temp = TrainMinDataFrame.query('TrainId == @train_val')
-    temp = temp.reset_index()
-    listTime = temp['TimeStamp']
+    currentTrainDF = TrainMinDataFrame.query('TrainId == @train_val')
+    currentTrainDF = currentTrainDF.reset_index()
+    print(hd.listTime[0])
+    hd.listTime = currentTrainDF['TimeStamp']
     data = json.loads(hiden)
     data['train_id_val']=train_val
-    data['time_val']=listTime[0]
+    data['time_val']=hd.listTime[0]
+    lbldAllEvents= TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
+    lbldTrainEvents = currentTrainDF.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
+    allLblCount = len(lbldAllEvents.index)
+    trnLblCount = len(lbldTrainEvents.index)
     jsret = json.dumps(data)
-    optn = [{'label': i, 'value': i} for i in listTime]
-    return optn, jsret
+    optn = [{'label': i, 'value': i} for i in hd.listTime]
+    # print(optn)
+    return optn, jsret, trnLblCount, allLblCount
 
 
 @app.callback(
@@ -58,8 +67,10 @@ def update_graph(train_val, time_val):
          )
     data = [trace0, trace1, trace2]
 
-    layout = go.Layout()#title = 'Left and Right Axle Graph')
-    figure= go.Figure(data=data, layout=layout)    
+    layout = go.Layout()#title = 'Left and Right Axle Graph'):
+    figure= go.Figure(data=data, layout=layout)  
+    figure.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest', legend_orientation='h')
+
     return figure
 
 @app.callback(
@@ -142,5 +153,5 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
     data['indexVal']=int(indexVal)
     # print(data)
     jsret = json.dumps(data)
-    # print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
+    print(retTime, retTrain, jsret,retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
     return retTime,retTrain,jsret, retAxleEvent, retOdoAlgo, retSpeed, retExpertComment
