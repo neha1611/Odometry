@@ -15,7 +15,8 @@ app = dash.Dash(__name__,
 app.title = name
 
 dburl = 'postgresql://'+PGUSER+':'+PGPASSWORD+'@'+PGHOST+'/'+PGDATABASE
-engine = sqlalchemy.create_engine(dburl)#'postgresql://scott:tiger@localhost/mydatabase')
+engine = sqlalchemy.create_engine(dburl)
+#'postgresql://scott:tiger@localhost/mydatabase')
 # dbConn = psycopg2.connect(user=PGUSER,
 # 					password=PGPASSWORD,
 # 					database=PGDATABASE,

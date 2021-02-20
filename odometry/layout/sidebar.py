@@ -10,7 +10,7 @@ sidebar_header = dbc.Row([
                     dbc.Col([
                         html.Button(
                             html.Span(
-                                html.Img(src=app.get_asset_url("/assets/images/Odometry_Logo_1.png"), 
+                                html.Img(src=app.get_asset_url("/assets/images/Odometry_Carbonblue.png"), 
                                     style = {'height' : '40px' , 'width' : '40px'})
                                 ),
                                 className="navbar-toggler",
@@ -19,7 +19,7 @@ sidebar_header = dbc.Row([
                             ),
                             html.Button(
                                 html.Span(
-                                    html.Img(src=app.get_asset_url("images/Odometry_Logo_1.png"), 
+                                    html.Img(src=app.get_asset_url("images/Odometry_Carbonblue.png"), 
                                         style = {'height' : '40px' , 'width' : '40px'})
                                     ),
                                     className="navbar-toggler",
@@ -40,12 +40,9 @@ sidebar = html.Div([
                 ),
             dbc.Collapse([
                     dbc.Nav([
-                        dbc.NavLink("Overview", href=home_page_location, id="page-1-link"),
-                        dbc.NavLink("TRE", href=".", id="page-2-link"),
-                        dbc.NavLink("Simulations", href=".", id="page-3-link"),
-                        dbc.NavLink("Statistics", href=".", id="page-4-link"),
-                        dbc.NavLink("Machine Learning", href=".", id="page-5-link"),
-                        dbc.NavLink("Geographical view", href=".", id="page-6-link")
+                        dbc.NavLink("Edit Labels", href=home_page_location, id="page-1-link"),
+                        dbc.NavLink("Classification Performance", href=".", id="page-2-link"),
+                        dbc.NavLink("Classification Review", href=".", id="page-3-link")
                     ],
                     vertical=True, pills=True,
                     ),

@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 
+import datetime
 import plotly.express as px 
 import dash_table 
 import plotly.graph_objects as go
@@ -8,19 +9,22 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 
 from utils.functions import *
-from pages.home.home_data import TrainMinDataFrame, listOfTrains, listTime
+from pages.home.home_data import  currentTrainMinDF, TrainListDF,TrainMinDataFrame#, listOfTrains, listTime
 
-from pages.home.home_callbacks import update_graph
+from pages.home.home_callbacks import update_output
 
 layout = html.Div(
     [
-    html.Div(id='intermediate-value', style={'display': 'none'} ,
-        children="{\"train_id_val\":"+str(listOfTrains[0])+", \"time_val\":\""+str(listTime[0])+"\"}"
+    html.Div(id='hid_train', style={'display': 'none'} ,
+        children="{\"train_id_val\":\""+str(TrainListDF.at[0,'TrainId'])+"\"}"#, \"time_val\":\""+str(currentTrainMinDF.at[0, 'TimeStamp'])+"\"}"
+        ),
+    html.Div(id='hid_time', style={'display': 'none'} ,
+        children="{\"time_val\":\""+str(currentTrainMinDF.at[0,'TimeStamp'])+"\"}"#, \"time_val\":\""+str(currentTrainMinDF.at[0, 'TimeStamp'])+"\"}"
         ),
     dbc.Row(
         dbc.Col(
             dbc.Card([
-                dbc.CardHeader(html.H4('RSSI Curves')),
+                dbc.CardHeader(html.H4('Edit Labels')),
                 dbc.CardBody([
                     dbc.Row([
                         dbc.Col(
@@ -30,28 +34,39 @@ layout = html.Div(
                                 dcc.Dropdown(id="slct_train",
                                     options=[
                                     {'label': i, 'value': i}
-                                    for i in listOfTrains
+                                    for i in TrainListDF['TrainId'].tolist()
                                     ],
                                     multi=False,
                                     # placeholder='Filter by Train ID...',
-                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TrainId']
+                                     value=eval('currentTrainMinDF.iloc[{}]'.format(0))['TrainId']
                                     )
                                 )
                             ]),
                         dbc.Col(
                             [
-                            dbc.Label(html.P("TimeStamp")),
-                            html.Div(
-                                dcc.Dropdown(id="slct_time",
-                                    options=[
-                                    {'label': i, 'value': i}
-                                    for i in listTime
-                                    ],
-                                    multi=False,
-                                    # placeholder='Filter by Time...',
-                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TimeStamp']
-                                    )
-                                )
+                            dbc.Label(html.P("PickDate Range")),
+                            html.Div([
+                                dcc.DatePickerRange(
+                                    id='dateRange',
+                                    min_date_allowed=(eval('TrainListDF.iloc[{}]'.format(0))['MinDate']).date(),
+                                    max_date_allowed=((eval('TrainListDF.iloc[{}]'.format(0))['MaxDate']).date()+datetime.timedelta(weeks=6)),
+                                    # initial_visible_month=date(2017, 8, 5),
+                                    # end_date=date(2017, 8, 25)
+                                ),
+                                html.Div(id='hid_time_range', style={'display': 'none'})
+                            ])
+                            # dbc.Label(html.P("TimeStamp")),
+                            # html.Div(
+                            #     dcc.Dropdown(id="slct_time",
+                            #         options=[
+                            #         {'label': i, 'value': i}
+                            #         for i in listTime
+                            #         ],
+                            #         multi=False,
+                            #         # placeholder='Filter by Time...',
+                            #         value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TimeStamp']
+                            #         )
+                            #     )
                             ])
                          ]
                          ),
@@ -75,15 +90,15 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Axle Event")), width=4),
+                                                    dbc.Label(html.P("Axle Event")), width=2),
                                             dbc.Col(
                                                     dbc.RadioItems( id="rd_axle",
                                                         options=[
                                                         {'label': 'Likely', 'value': 'Likely'},
-                                                        {'label': 'Unlikely', 'value': 'Unlikely'},
+                                                        {'label': 'Unlikely', 'value': 'UnLikely'},
                                                         {'label': 'Maybe', 'value': 'Maybe'}
                                                         ],
-                                                        value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblAxleEvent']
+                                                        value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblAxleEvent']
                                                         , inline=True
                                                     )
                                                 )
@@ -96,7 +111,7 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Odometry Algo Issues")), width=4),
+                                                    dbc.Label(html.P("Odometry Algo")), width=2),
                                             dbc.Col(
                                                 dbc.RadioItems( id="rd_algo",
                                                     options=[
@@ -104,7 +119,7 @@ layout = html.Div(
                                                     {'label': 'UnLikely', 'value': 'UnLikely'},
                                                     {'label': 'Maybe', 'value': 'Maybe'}
                                                     ],
-                                                    value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblOdoAlgo']
+                                                    value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblOdoAlgo']
                                                     , inline=True
                                                     )
                                                 )
@@ -117,7 +132,7 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Speed")), width=4),
+                                                    dbc.Label(html.P("Speed")), width=2),
                                             dbc.Col(
                                                     dbc.RadioItems( id="rd_speed",
                                                         options=[
@@ -125,7 +140,7 @@ layout = html.Div(
                                                         {'label': 'Possible Over Estimation', 'value': 'PossOver'},
                                                         {'label': 'OK', 'value': 'OK'}
                                                         ],
-                                                        value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['LblSpeed']
+                                                        value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblSpeed']
                                                         , inline=True
                                                         )
                                                 )
@@ -133,16 +148,14 @@ layout = html.Div(
                                         )
                                     )
                                 ),
-                            dbc.Row(
+                            dbc.Row([
+                                dbc.Col(dbc.Label(html.P("Expert Comment")), width=2
+                                    ), 
                                 dbc.Col(
-                                    html.Div(
-                                        [
-                                        dbc.Label(html.P("Expert Comment")),
-                                        dbc.Input(id="expert_comment", placeholder="Expert Comments", 
-                                            type="text", value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['ExpertComment'])
-                                        ])
+                                    dbc.Input(id="expert_comment", placeholder="Expert Comments", 
+                                            type="text", value=eval('currentTrainMinDF.iloc[{}]'.format(0))['ExpertComment'])
                                     )
-                                ),
+                                ]),
                             dbc.Row(dbc.Col(html.Br())),
                             dbc.Row([
                                 dbc.Col(

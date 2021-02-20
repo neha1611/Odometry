@@ -1,3 +1,6 @@
+div.svg-container{
+  position: relative; max-height: 220px;
+}
 @font-face {
   font-family: 'Alstom';
   src: url('Alstom.eot');
@@ -11,6 +14,9 @@
   font-display: swap;
 }
 
+.card-body{
+  padding-top: .5rem;
+}
 @font-face {
   font-family: 'Work Sans';
   src: url('WorkSans-Regular.eot');
@@ -35,7 +41,7 @@
 body {
   font-family: 'Work Sans';
   background-color: #FFFFFF;
-  margin: 3%;
+  margin: 0%;
   margin-top: 1%;
   width: auto;
   height: auto;
@@ -638,7 +644,7 @@ padding-top: 0px;
 
 /* add the three horizontal bars icon for the toggle */
 .navbar-toggler-icon {
-  background-image: url("Odometry_Logo_1.png");
+  background-image: url("Odometry_White.png");
 }
 
 #page-content {
@@ -702,7 +708,7 @@ padding-top: 0px;
 
   /* set margins of the main content so that it doesn't overlap the sidebar */
   #page-content {
-    margin-left: 22rem;
+    margin-left: 20rem;
     margin-right: 2rem;
     transition: margin-left 0.3s ease-in-out;
   }
