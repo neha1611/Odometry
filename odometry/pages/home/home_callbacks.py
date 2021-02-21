@@ -35,10 +35,10 @@ def update_dp(train_val, hid_train):
     data['train_id_val']=train_val
     #Count Train Level lables
     #TODO implement update all lables count
-    # lbldAllEvents= TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
-    # lbldTrainEvents = currentTrainMinDF.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
-    allLblCount = 0 #len(lbldAllEvents.index)
-    trnLblCount = 0#len(lbldTrainEvents.index)
+    lbldAllEvents= hd.TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
+    lbldTrainEvents = hd.TrainMinDataFrame.query('TrainId==@train_val and (LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna())')
+    allLblCount = len(lbldAllEvents.index)
+    trnLblCount = len(lbldTrainEvents.index)
     jsret = json.dumps(data)
     print(retMinDate, retMaxDate,retMinDate, retMaxDate, jsret, trnLblCount, allLblCount)
     return retMinDate, retMaxDate,retMinDate, retMaxDate, jsret, trnLblCount, allLblCount
@@ -72,8 +72,6 @@ def update_time_range(startDate, endDate, train_var):
     Output(component_id="rd_algo",  component_property="value"),
     Output(component_id="rd_speed",  component_property="value"),
     Output(component_id="expert_comment",  component_property="value")],
-    #[#Input(component_id='hid_time_range', component_property='children'),
-    #Input(component_id='hid_time', component_property='children'), 
     Input("divAnomalyIndex", "children"),#],
     State(component_id='hid_train', component_property='children')
 )
@@ -112,20 +110,15 @@ def update_output( hid_anmly, hid_train):
     figure= go.Figure(data=data, layout=layout)  
     figure.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, 
         hovermode='closest', legend_orientation='h')
-    # retTime = hd.currentTrainMinDF.at[indexVal,'TimeStamp']
-    # retTrain = currentTrainMinDF.at[indexVal,'TrainId']
     retAxleEvent = hd.currentTrainMinDF.at[indexVal,'LblAxleEvent']
     retOdoAlgo = hd.currentTrainMinDF.at[indexVal,'LblOdoAlgo']
     retSpeed = hd.currentTrainMinDF.at[indexVal,'LblSpeed']
     retExpertComment = hd.currentTrainMinDF.at[indexVal,'ExpertComment']
-    print("return")
-    # print(retTime)
     print(retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
     return figure, retAxleEvent, retOdoAlgo, retSpeed, retExpertComment
 
 @app.callback(
-    [#Output(component_id='hid_time', component_property='children'),
-     Output("divAnomalyIndex", "children"),
+    [Output("divAnomalyIndex", "children"),
      Output('prev_btn', 'disabled'),
      Output('nxt_btn', 'disabled'),
      Output('btn_prev_anm', 'disabled'),
@@ -136,8 +129,7 @@ def update_output( hid_anmly, hid_train):
      Input('btn_prev_anm', 'n_clicks_timestamp'),
      Input('btn_nxt_anm', 'n_clicks_timestamp'), 
      Input(component_id='hid_time_range', component_property='children')],
-    [#State(component_id='hid_time', component_property='children'),
-     State(component_id="divAnomalyIndex", component_property="children"), 
+    [State(component_id="divAnomalyIndex", component_property="children"), 
      State("rd_axle", "value"),
      State("rd_algo","value"),
      State("rd_speed", "value"), 
@@ -153,8 +145,6 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
     timeRangeData = json.loads(hid_time_range)
     range_nclicksTimeStamp = timeRangeData['nClicksTimestamp']
     print(range_nclicksTimeStamp,prevAnm_clicks )
-    # timeData = json.loads(time_var)
-    # retTime = timeData['time_val']
     data = json.loads(vars)
     anomalyIndex = data['anomalyIndex']
     indexVal = data['indexVal']
@@ -207,12 +197,9 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
             print(trainMinIdx, indexVal)
         else:
             btn_clicked = 'None'
-    # time_val = hd.currentTrainMinDF.at[indexVal,'TimeStamp']
     data['anomalyIndex']=int(anomalyIndex)
     data['indexVal']=int(indexVal)
-    # timeData['time_val'] = time_val
     jsret = json.dumps(data)
-    # jsretTime = json.dumps(timeData)
     print(jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl)
     return jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl
 

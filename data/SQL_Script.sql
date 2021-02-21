@@ -3,7 +3,7 @@ CREATE TABLE odometry.tbl_train_min_data
 (
     train_min_idx integer NOT NULL,
     train_id integer NOT NULL,
-    time_stamp varchar(20) NOT NULL,
+    time_stamp timestamp NOT NULL,
     anomaly_score numeric NOT NULL,
     expert_comment varchar,
     class_axle_event VARCHAR(10),
