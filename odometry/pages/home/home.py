@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-
+import dash_datetimepicker as dd
 import datetime
 import plotly.express as px 
 import dash_table 
@@ -9,14 +9,19 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 
 from utils.functions import *
-from pages.home.home_data import  currentTrainMinDF, TrainListDF,TrainMinDataFrame#, listOfTrains, listTime
+from pages.home.home_data import  currentTrainMinDF, TrainListDF,TrainMinDataFrame
 
 from pages.home.home_callbacks import update_output
 
+def onBodyLoad():
+    return "{\"boday_loaded\":\"true\"}"
+
 layout = html.Div(
     [
+    html.Div( id="hid_body_loaded", style={'display': 'none'} , children=onBodyLoad()),
+    html.Div(id="hid_timeoffset", style={'display':'none'}),
     html.Div(id='hid_train', style={'display': 'none'} ,
-        children="{\"train_id_val\":\""+str(TrainListDF.at[0,'TrainId'])+"\"}"#, \"time_val\":\""+str(currentTrainMinDF.at[0, 'TimeStamp'])+"\"}"
+        children="{\"train_id_val\":\""+str(TrainListDF.at[0,'TrainId'])+"\"}"
         ),
     html.Div(id='hid_time', style={'display': 'none'} ,
         children="{\"time_val\":\""+str(currentTrainMinDF.at[0,'TimeStamp'])+"\"}"#, \"time_val\":\""+str(currentTrainMinDF.at[0, 'TimeStamp'])+"\"}"
@@ -46,14 +51,14 @@ layout = html.Div(
                             [
                             dbc.Label(html.P("PickDate Range")),
                             html.Div([
-                                dcc.DatePickerRange(
+                                dd.DashDatetimepicker(
                                     id='dateRange',
-                                    min_date_allowed=(eval('TrainListDF.iloc[{}]'.format(0))['MinDate']).date(),
-                                    max_date_allowed=((eval('TrainListDF.iloc[{}]'.format(0))['MaxDate']).date()+datetime.timedelta(weeks=6)),
+                                    startDate=(eval('TrainListDF.iloc[{}]'.format(0))['MinDate']),
+                                    endDate=((eval('TrainListDF.iloc[{}]'.format(0))['MaxDate'])),
                                     # initial_visible_month=date(2017, 8, 5),
                                     # end_date=date(2017, 8, 25)
                                 ),
-                                html.Div(id='hid_time_range', style={'display': 'none'})
+                                html.Div(id='hid_time_range', style={'display': 'none'}),
                             ])
                             # dbc.Label(html.P("TimeStamp")),
                             # html.Div(

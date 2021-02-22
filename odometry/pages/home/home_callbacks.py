@@ -1,19 +1,27 @@
 import json, datetime
+from dateutil import tz
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 import pages.home.home_data as hd
 from utils.functions import *
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output, State, ClientsideFunction
 from app import app
 from pages.home.home_data import currentTrainMinDF,  currentTrainFeatureDF, TrainListDF
 from pages.home.home_functions import *
 
+app.clientside_callback(
+    output=Output('hid_timeoffset', 'children'),
+    inputs=[Input('hid_body_loaded', 'children')],
+    clientside_function = ClientsideFunction(
+        namespace='clientside',
+        function_name ='getOffset'
+    )
+)
+
 #When a Train is selected in dropdown, call this function to change working dataframe to that trains dataframe
 @app.callback(
     [
-    Output("dateRange", "max_date_allowed"),
-    Output("dateRange", "min_date_allowed"),
     Output("dateRange", "start_date"),
     Output("dateRange", "end_date"),
     Output(component_id='hid_train', component_property='children'),
@@ -28,8 +36,8 @@ def update_dp(train_val, hid_train):
     trainDF  = TrainListDF.query("TrainId==@train_val")
     trainDF.reset_index()
     print(trainDF)
-    retMinDate = (trainDF.iloc[0]['MinDate']).date()
-    retMaxDate = (trainDF.iloc[0]['MaxDate']).date()+datetime.timedelta(weeks=6)
+    retMinDate = (trainDF.iloc[0]['MinDate'])
+    retMaxDate = (trainDF.iloc[0]['MaxDate'])
     data = json.loads(hid_train)
     #set the hidden variables
     data['train_id_val']=train_val
@@ -40,21 +48,29 @@ def update_dp(train_val, hid_train):
     allLblCount = len(lbldAllEvents.index)
     trnLblCount = len(lbldTrainEvents.index)
     jsret = json.dumps(data)
-    print(retMinDate, retMaxDate,retMinDate, retMaxDate, jsret, trnLblCount, allLblCount)
-    return retMinDate, retMaxDate,retMinDate, retMaxDate, jsret, trnLblCount, allLblCount
+    print(retMinDate, retMaxDate, jsret, trnLblCount, allLblCount)
+    return retMinDate, retMaxDate, jsret, trnLblCount, allLblCount
 
 
 @app.callback(
     Output(component_id='hid_time_range', component_property='children'),
-    [Input(component_id='dateRange', component_property='start_date'),
-    Input(component_id='dateRange', component_property='end_date'),
-    Input(component_id='hid_train', component_property='children')]
+    [Input(component_id='dateRange', component_property='startDate'),
+    Input(component_id='dateRange', component_property='endDate'),
+    Input(component_id='hid_train', component_property='children')],
+    State("hid_timeoffset", "children")
 )
-def update_time_range(startDate, endDate, train_var):
+def update_time_range(startDate, endDate, train_var, hid_offset):
+    print("called back of datetimepicker")
+    offset = json.loads(hid_offset)['offset']
+    if(len(startDate)>19):
+        startDate = startDate[:-8]+'Z'
+        startDate = datetime.datetime.strptime(startDate,"%Y-%m-%dT%H:%MZ")
+        startDate = startDate-datetime.timedelta(minutes=int(offset))
+        startDate = startDate.strftime("%Y-%m-%d %H:%M")
     #get all data for selected Train
     data = json.loads(train_var)
     train_val = data['train_id_val']
-    print(train_val, startDate, endDate) 
+    print(train_val, startDate , endDate) 
     hd.currentTrainMinDF  = getTrainDataInRange(train_val,startDate, endDate )
     print(hd.currentTrainMinDF.at[0, 'TrainMinIdx'])
     data['start_date'] = startDate

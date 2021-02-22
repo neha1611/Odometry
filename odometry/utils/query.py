@@ -1,4 +1,6 @@
-query_distinct_train = ("SELECT train_id \"TrainId\", to_char(MIN(time_stamp), 'YYYYMMDD') \"MinDate\", to_char(MAX(time_stamp), 'YYYYMMDD') \"MaxDate\" "
+query_distinct_train = ("SELECT train_id \"TrainId\", "
+						+ " to_char(MIN(time_stamp), 'YYYY-MM-DD HH:MI') \"MinDate\", "
+						+" to_char(MAX(time_stamp), 'YYYY-MM-DD HH:MI') \"MaxDate\" "
 						+ " FROM odometry.tbl_train_min_data GROUP BY train_id ORDER BY train_id")
 query_FeaturesData=("SELECT train_min_idx \"TrainMinIdx\", "
 					+ "seconds \"Seconds\", "
@@ -41,6 +43,6 @@ query_TrainMinRangeData = ("SELECT train_min_idx \"TrainMinIdx\", "
 					+ "probability_speed "
 					+ "FROM odometry.tbl_train_min_data "
 					+ "WHERE train_id = {train_id} "
-					+ " AND time_stamp>='{startDate}'::date "
-					+ " AND time_stamp<='{endDate}'::date "
+					+ " AND time_stamp>='{startDate}' "
+					+ " AND time_stamp<='{endDate}' "
 					+ " ORDER BY anomaly_Score DESC")
