@@ -191,8 +191,15 @@ which works well instead. */
 .CardHeader {
   font-family: 'Alstom';
   font-size: 30px;
+  background-color: rgba(0,0,0,.03);
 }
 
+.dash-table-container .dash-spreadsheet-container th {
+  font-family: 'Alstom';
+}
+.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner table{
+  font-family: 'Alstom';
+}
 
 .mini_container {
   border-radius: 5px;

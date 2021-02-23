@@ -2,7 +2,7 @@ from app import app
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 
-from utils.constants import home_page_location
+from utils.constants import home_page_location, home1_page_location
 sidebar_header = dbc.Row([
                     dbc.Col(
                         html.H2("Odometry")
@@ -41,6 +41,7 @@ sidebar = html.Div([
             dbc.Collapse([
                     dbc.Nav([
                         dbc.NavLink("Edit Labels", href=home_page_location, id="page-1-link"),
+                        dbc.NavLink("Edit Labels Alternate", href=home1_page_location, id="page-1.1-link"),
                         dbc.NavLink("Classification Performance", href=".", id="page-2-link"),
                         dbc.NavLink("Classification Review", href=".", id="page-3-link")
                     ],
