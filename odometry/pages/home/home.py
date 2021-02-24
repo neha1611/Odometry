@@ -141,14 +141,26 @@ layout = html.Div(
                                             dbc.Col(
                                                     dbc.RadioItems( id="rd_speed",
                                                         options=[
-                                                        {'label': 'Possible Under Estimation', 'value': 'PossUnder'},
-                                                        {'label': 'Possible Over Estimation', 'value': 'PossOver'},
+                                                        {'label': 'Possible Under Estimation', 'value': 'Possible Under Estimation'},
+                                                        {'label': 'Possible Over Estimation', 'value': 'Possible Over Estimation'},
                                                         {'label': 'OK', 'value': 'OK'}
                                                         ],
                                                         value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblSpeed']
                                                         , inline=True
                                                         )
-                                                )
+                                                ),
+                                            dbc.Col([
+                                                dbc.Alert("Labels Updated Successfully!!", 
+                                                            id="id_alert_submit_success",
+                                                            is_open=False,
+                                                            duration=2000, color="success"
+                                                        ),
+                                                dbc.Alert("Could not Submit Labels !",
+                                                        id="id_alert_submit_failure",
+                                                        is_open=False,
+                                                        duration=3000, color="danger")
+                                                ])
+                                            
                                             ])
                                         )
                                     )

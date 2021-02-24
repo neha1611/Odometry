@@ -17,17 +17,20 @@ currentTrainMinDF  = getTrainData(TrainListDF.at[0,'TrainId'])
 # startTime = currentTrainMinDF.at[0, 'TimeStamp']
 #Get the seconds level data for the most anomalous minute by default
 currentTrainFeatureDF = getTrainFeatures(currentTrainMinDF['TrainMinIdx'].iloc[0])
-connection = engine.connect()
-TBLTrainMin = sqlalchemy.Table('tbl_train_min_data', metadata, autoload=True, autoload_with=engine)
+TrainMinDataFrame = getAllTrainMinData()
+# connection = engine.connect()
+# TBLTrainMin = sqlalchemy.Table('tbl_train_min_data', metadata, autoload=True, autoload_with=engine)
 
-query = sqlalchemy.select([TBLTrainMin]).order_by(TBLTrainMin.columns.train_id, sqlalchemy.desc(TBLTrainMin.columns.anomaly_score))
-resultSet = connection.execute(query).fetchall()
-TrainMinDataFrame = pd.DataFrame(resultSet)
-TrainMinDataFrame.columns = resultSet[0].keys()
-TrainMinDataFrame = TrainMinDataFrame.rename(columns={"train_min_idx": "TrainMinIdx", "train_id": "TrainId", "time_stamp":"TimeStamp", "anomaly_score":"AnomalyScore", "expert_comment":"ExpertComment", "class_axle_event":"LblAxleEvent", "class_odo_algo":"LblOdoAlgo", "class_speed":"LblSpeed"})
-TrainMinDataFrame.reset_index(inplace=True)
-TrainMinDataFrame.head()
-
+# query = sqlalchemy.select([TBLTrainMin]).order_by(TBLTrainMin.columns.train_id, sqlalchemy.desc(TBLTrainMin.columns.anomaly_score))
+# resultSet = connection.execute(query).fetchall()
+# TrainMinDataFrame = pd.DataFrame(resultSet)
+# TrainMinDataFrame.columns = resultSet[0].keys()
+# TrainMinDataFrame = TrainMinDataFrame.rename(columns={"train_min_idx": "TrainMinIdx", "train_id": "TrainId", "time_stamp":"TimeStamp", "anomaly_score":"AnomalyScore", "expert_comment":"ExpertComment", "class_axle_event":"LblAxleEvent", "class_odo_algo":"LblOdoAlgo", "class_speed":"LblSpeed"})
+# TrainMinDataFrame.reset_index(inplace=True)
+# TrainMinDataFrame.head()
+# lbldAllEvents= TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
+# lbldTrainEvents = currentTrainMinDF.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
+    
 
 
 

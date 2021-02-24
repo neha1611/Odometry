@@ -40,6 +40,7 @@ div.svg-container{
 /* overall layout  */
 body {
   font-family: 'Work Sans';
+  font-size: small;
   background-color: #FFFFFF;
   margin: 0%;
   margin-top: 1%;
@@ -209,7 +210,39 @@ which works well instead. */
   position: relative;
   box-shadow: 2px 2px 2px lightgrey;
 }
+.nav-pills .nav-link.active{
+    color: #fff;
+    background-color: #0062c;
+}
+.alert{
+  font-family: 'Work Sans';
+  padding:0rem 0rem;
 
+}
+.custom-form-input{
+  font-family: 'Work Sans';
+  font-size:small;
+}
+.btn-group, .radio-label{
+  font-family: 'Work Sans';
+  font-size:small;
+}
+.custom-radio{
+  font-family: 'Work Sans';
+  font-size:small;
+}
+.label, .custom-control-label{
+  font-family: 'Work Sans';
+  font-size:small;
+}
+.btn-primary{
+  font-family: 'Work Sans';
+  font-size:small;
+}
+.form-control {
+  font-family: 'Work Sans';
+  font-size:small;
+}
 .mini_container_label {
   font-weight: bold;
   align-items: space-around;
@@ -279,6 +312,7 @@ P {
   font-family: "Work Sans";
   color: #1E3246;
   font-weight: bold;
+  font-size:small;
   margin: 0%;
   padding: 0%;
 }
@@ -293,6 +327,7 @@ P {
   color: #1E3246;
   font-weight: bold;
 }
+
 
 /* .main_heading {
 

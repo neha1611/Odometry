@@ -46,3 +46,11 @@ query_TrainMinRangeData = ("SELECT train_min_idx \"TrainMinIdx\", "
 					+ " AND time_stamp>='{startDate}' "
 					+ " AND time_stamp<='{endDate}' "
 					+ " ORDER BY anomaly_Score DESC")
+quey_AllTrainData = ("SELECT train_id \"TrainId\", "
+					+ "to_char(time_stamp, 'YYYY-MM-DD HH:MI') \"TimeStamp\", "
+					+ "anomaly_score \"AnomalyScore\", "
+					+ "class_axle_event \"LblAxleEvent\", "
+					+ "class_odo_algo \"LblOdoAlgo\", " 
+					+ "class_speed \"LblSpeed\" "
+					+ "FROM odometry.tbl_train_min_data "
+					+ " ORDER BY Train_id, anomaly_Score DESC")

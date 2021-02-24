@@ -9,7 +9,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 
 from utils.functions import *
-from pages.home.home_data import  currentTrainMinDF, TrainListDF,TrainMinDataFrame
+from pages.home.home_data import  currentTrainMinDF, TrainListDF,TrainMinDataFrame#, lbldAllEvents, lbldTrainEvents
 
 from pages.home.home_callbacks import update_output
 
@@ -32,7 +32,7 @@ layout = html.Div(
         dbc.Col(
             dbc.Card(
                 dbc.CardBody([
-                    html.H5(id="lbl1", className="card-title", ),
+                    html.H5(id="lbl1", className="card-title"),#, children=len(lbldTrainEvents)),
                     html.P("Current Train Labels", className="card-text")
                 ]), style={"width": "18rem"}
                 )
@@ -40,7 +40,7 @@ layout = html.Div(
         dbc.Col(
             dbc.Card(
                 dbc.CardBody([
-                    html.H5(id="lbl2",  className="card-title"),
+                    html.H5(id="lbl2",  className="card-title"),#, children=len(lbldAllEvents)),
                     html.P("All Trains Labels", className="card-text"),
                 ]), style={"width": "18rem"}
                 )
@@ -67,10 +67,10 @@ layout = html.Div(
                                      value=eval('currentTrainMinDF.iloc[{}]'.format(0))['TrainId']
                                     )
                                 )
-                            ]),
+                            ], width=2),
                         dbc.Col(
                             [
-                            dbc.Label(html.P("PickDate Range")),
+                            dbc.Label(html.P("Pick Date Range")),
                             html.Div([
                                 dd.DashDatetimepicker(
                                     id='dateRange',
@@ -81,34 +81,26 @@ layout = html.Div(
                                 ),
                                 html.Div(id='hid_time_range', style={'display': 'none'}),
                             ])
-                            # dbc.Label(html.P("TimeStamp")),
-                            # html.Div(
-                            #     dcc.Dropdown(id="slct_time",
-                            #         options=[
-                            #         {'label': i, 'value': i}
-                            #         for i in listTime
-                            #         ],
-                            #         multi=False,
-                            #         # placeholder='Filter by Time...',
-                            #         value=eval('TrainMinDataFrame.iloc[{}]'.format(0))['TimeStamp']
-                            #         )
-                            #     )
-                            ])
-                         ]
+                            
+                            ], width=6)
+                         ], justify='start'
                          ),
+                    dbc.Row(dbc.Col(html.Hr(), width=12, style={'padding-right':0, 'padding-lfet':0})),
                     dbc.Row([
                         dbc.Col(dbc.Button("<",id="btn_prev_anm", 
-                            color="primary", n_clicks_timestamp=0), width=1,
+                            color="primary", n_clicks_timestamp=0), width=0.5,
                             align="center", className="h-50"),
                         dbc.Col(
                             html.Div(
-                                dcc.Graph(id='my_map', figure={})
-                                ) ,width=10
+                                dcc.Graph(id='my_map', figure={}, config = {'displayModeBar': False}, 
+                                    style = {'height' : 250, 'width' : '100%'})
+                                ) ,width=11
                             ),
                         dbc.Col(dbc.Button(">",id="btn_nxt_anm", 
-                            color="primary", n_clicks_timestamp=0), width=1,
+                            color="primary", n_clicks_timestamp=0), width=0.5,
                             align="center", className="h-50")
                         ]),
+                    html.Br(),
                     dbc.Row([
                         dbc.Col([
                             dbc.Row(
@@ -116,7 +108,7 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Axle Event")), width=2),
+                                                    dbc.Label(html.P("Axle Event")), width=2,className="radio-label"),
                                             dbc.Col(
                                                     dbc.RadioItems( id="rd_axle",
                                                         options=[
@@ -137,7 +129,7 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Odometry Algo")), width=2),
+                                                    dbc.Label(html.P("Odometry Algo")), width=2, className="radio-label"),
                                             dbc.Col(
                                                 dbc.RadioItems( id="rd_algo",
                                                     options=[
@@ -147,8 +139,19 @@ layout = html.Div(
                                                     ],
                                                     value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblOdoAlgo']
                                                     , inline=True
-                                                    )
-                                                )
+                                                    ), width=6
+                                                ),
+                                            dbc.Col([
+                                                dbc.Alert("Labels Updated Successfully!!", 
+                                                            id="id_alert_submit_success",
+                                                            is_open=False,
+                                                            duration=2000, color="success"
+                                                        ),
+                                                dbc.Alert("Could not Submit Labels !",
+                                                        id="id_alert_submit_failure",
+                                                        is_open=False,
+                                                        duration=3000, color="danger")
+                                                ])
                                             ])
                                         )
                                     )
@@ -158,35 +161,35 @@ layout = html.Div(
                                     html.Div(
                                         dbc.Row([
                                             dbc.Col(
-                                                    dbc.Label(html.P("Speed")), width=2),
+                                                    dbc.Label(html.P("Speed")), width=2, className="radio-label"),
                                             dbc.Col(
                                                 dbc.RadioItems( id="rd_speed",
                                                     options=[
-                                                    {'label': 'Possible Under Estimation', 'value': 'PossUnder'},
-                                                    {'label': 'Possible Over Estimation', 'value': 'PossOver'},
-                                                    {'label': 'OK', 'value': 'OK'}
+                                                    {'label': 'Possible Under Estimation', 'value': 'Possible Under Estimation'},
+                                                    {'label': 'Possible Over Estimation', 'value': 'Possible Over Estimation'},
+                                                    {'label': 'Ok', 'value': 'OK'}
                                                     ],
                                                     value=eval('currentTrainMinDF.iloc[{}]'.format(0))['LblSpeed']
                                                     , inline=True
-                                                    )
+                                                    ), width=7
                                                 )
                                             ])
                                         )
                                     )
                                 ),
                             dbc.Row([
-                                dbc.Col(dbc.Label(html.P("Expert Comment")), width=2
+                                dbc.Col(dbc.Label(html.P("Expert Comment"), className="radio-label"), width=2
                                     ), 
                                 dbc.Col(
-                                    dbc.Input(id="expert_comment", placeholder="Expert Comments", 
+                                    dbc.Input(id="expert_comment", placeholder="Expert Comments", className="custom-font",
                                             type="text", value=eval('currentTrainMinDF.iloc[{}]'.format(0))['ExpertComment'])
                                     , width=6),
                                 dbc.Col(
                                     html.Div([
-                                        dbc.ButtonGroup(
-                                            [dbc.Button("Previous",id="prev_btn", color="primary", n_clicks_timestamp=0), 
-                                            dbc.Button("Submit Labels",id="sbmt_lbl_btn", color="primary", n_clicks_timestamp=0), 
-                                            dbc.Button("Next",id="nxt_btn", color="primary", n_clicks_timestamp=0)]
+                                        dbc.ButtonGroup( 
+                                            [dbc.Button("Previous",id="prev_btn", color="primary", className="custom-font",n_clicks_timestamp=0), 
+                                            dbc.Button("Submit Labels",id="sbmt_lbl_btn", color="primary", n_clicks_timestamp=0,className="custom-font", n_clicks=0), 
+                                            dbc.Button("Next",id="nxt_btn", color="primary", n_clicks_timestamp=0,className="custom-font")]
                                         ),
                                         html.Div(id='clicked-button', 
                                                 children='sbmtLbl:0 sbmtLbLNxt:0 skp:0 prev:0 nxt:0 last:nan', 
@@ -212,7 +215,7 @@ layout = html.Div(
                                 # columns=[{'name': i, 'id': i} for i in TrainMinDataFrame.loc[:,['TrainId','TimeStamp','AnomalyScore','LblAxleEvent','LblOdoAlgo','LblSpeed']]],
                                 # columns=[{"name": i, "id": i} 
                                 #     for i in [TrainMinDataFrame.columns
-                                columns= [{"name": "Vehicle Id", "id": "TrainId"},
+                                columns= [{"name": "Vehicle", "id": "TrainId"},
                                             {"name": "Timestamp", "id": "TimeStamp"},
                                             {"name": "Anomaly Score", "id": "AnomalyScore"},
                                             {"name": "Axle Event", "id": "LblAxleEvent"},

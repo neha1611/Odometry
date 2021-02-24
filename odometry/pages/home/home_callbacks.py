@@ -25,11 +25,9 @@ app.clientside_callback(
 #Calculates number of lables
 @app.callback(
     [
-    Output("dateRange", "start_date"),
-    Output("dateRange", "end_date"),
-    Output(component_id='hid_train', component_property='children'),
-    Output(component_id='lbl1', component_property='children'),
-    Output(component_id='lbl2', component_property='children')],
+    Output("dateRange", "startDate"),
+    Output("dateRange", "endDate"),
+    Output(component_id='hid_train', component_property='children')],
     Input(component_id='slct_train', component_property='value')
 )
 def onUpdateTrain(train_val):
@@ -39,16 +37,13 @@ def onUpdateTrain(train_val):
     retMaxDate = (trainDF.iloc[0]['MaxDate'])
     data = {}
     data['train_id_val']=train_val
+    data['nClicksTimestamp'] = datetime.datetime.now().timestamp()*1000
     #Count Train Level lables
     #TODO implement update all lables count
-    lbldAllEvents= hd.TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')
-    lbldTrainEvents = hd.TrainMinDataFrame.query('TrainId==@train_val and (LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna())')
-    allLblCount = len(lbldAllEvents.index)
-    trnLblCount = len(lbldTrainEvents.index)
+    # allLblCount = len(lbldAllEvents.index)
+    # trnLblCount = len(lbldTrainEvents.index)
     jsret = json.dumps(data)
-    print(retMinDate, retMaxDate, jsret, trnLblCount, allLblCount)
-    return retMinDate, retMaxDate, jsret, trnLblCount, allLblCount
-
+    return retMinDate, retMaxDate, jsret
 
 #Called on Update of hidden variable hid_train (change of Train Id selection)
 #Or when to and from date is changed in Date Picker
@@ -74,6 +69,7 @@ def update_time_range(startDate, endDate, train_var, hid_offset):
     train_val = json.loads(train_var)['train_id_val']
     #query DB for data for Selected Train and Time Range
     hd.currentTrainMinDF  = getTrainDataInRange(train_val,startDate, endDate )
+    print(hd.currentTrainMinDF[:5])
     # print(hd.currentTrainMinDF.at[0, 'TrainMinIdx'])
     data={}
     data['start_date'] = startDate
@@ -94,7 +90,11 @@ def update_time_range(startDate, endDate, train_var, hid_offset):
      Output('prev_btn', 'disabled'),
      Output('nxt_btn', 'disabled'),
      Output('btn_prev_anm', 'disabled'),
-     Output('btn_nxt_anm', 'disabled')],
+     Output('btn_nxt_anm', 'disabled'),
+     Output('id_alert_submit_success', 'is_open'),
+     Output('id_alert_submit_failure', 'is_open'),
+     Output(component_id='lbl1', component_property='children'),
+     Output(component_id='lbl2', component_property='children') ],
     [Input('sbmt_lbl_btn', 'n_clicks_timestamp'),
      Input('prev_btn', 'n_clicks_timestamp'),
      Input('nxt_btn', 'n_clicks_timestamp'),
@@ -104,15 +104,19 @@ def update_time_range(startDate, endDate, train_var, hid_offset):
     [State(component_id="divAnomalyIndex", component_property="children"), 
      State("rd_axle", "value"),
      State("rd_algo","value"),
-     State("rd_speed", "value"), 
-     State("expert_comment", "value")]
+     State("rd_speed", "value"),
+     State("expert_comment", "value"),
+     State("hid_train","children")]
 )
 def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, 
-    prevBtn_clicks, nextBtn_clicks, hid_time_range, vars, lblAxl, lblOdo, lblSpd, exptCmt):
+    prevBtn_clicks, nextBtn_clicks, hid_time_range, vars, lblAxl, lblOdo, lblSpd, exptCmt,hid_train):
     prev_dsbl=False
     nxt_dsbl=False
     prev_anm_dsbl=False
     next_anm_dsbl=False
+    updateSuccess=False
+    updateFailure=False
+    train_val = json.loads(hid_train)['train_id_val']
     range_nclicksTimeStamp = json.loads(hid_time_range)['nClicksTimestamp']
     data = json.loads(vars)
     anomalyIndex = data['anomalyIndex']
@@ -130,7 +134,12 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
             hd.currentTrainMinDF.at[indexVal,'LblSpeed']=lblSpd
             hd.currentTrainMinDF.at[indexVal,'ExpertComment']=exptCmt
             currentDF = eval('hd.currentTrainMinDF.iloc[{}]'.format(indexVal))
-            updateTrainData(currentDF)
+            result = updateTrainData(currentDF)
+            if result==True:
+                updateSuccess=True
+                hd.TrainMinDataFrame = getAllTrainMinData()
+            else:
+                updateFailure=True
         elif nxtAnm_clicks==max_val:
             anomalyIndex = anomalyIndex+1
             indexVal = anomalyIndex
@@ -149,11 +158,15 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
             trainMinIdx = hd.currentTrainMinDF.at[indexVal,'TrainMinIdx']
             trainMinIdx = trainMinIdx+1
             indexVal = hd.currentTrainMinDF[hd.currentTrainMinDF['TrainMinIdx']==trainMinIdx].index[0]
+    lbldTrainEvents = hd.TrainMinDataFrame.query('TrainId==@train_val and (LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna())')
+    trnLblCount = len(lbldTrainEvents.index)
+    lbldAllEvents= hd.TrainMinDataFrame.query('LblAxleEvent.notna() or LblSpeed.notna() or LblOdoAlgo.notna()')   
+    allLblCount = len(lbldAllEvents.index)
     data['anomalyIndex']=int(anomalyIndex)
     data['indexVal']=int(indexVal)
     jsret = json.dumps(data)
-    print(jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl)
-    return jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl
+    print(jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl, updateSuccess, updateFailure, allLblCount, trnLblCount)
+    return jsret, prev_dsbl, nxt_dsbl, prev_anm_dsbl, next_anm_dsbl, updateSuccess, updateFailure,trnLblCount,allLblCount
 
 #Update all output Elements - Map, Labels for Axle, Odo Algo and Speed, and Expert Comment
 #Update the output Elements based on which tuple is to be shown determined by IndexVal
@@ -168,10 +181,15 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
 )
 def update_output( hid_anmly):
     # train_val = json.loads(hid_train)['train_id_val']
+    print("in Update Output")
     indexVal = json.loads(hid_anmly)['indexVal']
+    print (indexVal)
+    print(hd.currentTrainMinDF[:5])
     trainMinIdx_val = hd.currentTrainMinDF.at[indexVal,'TrainMinIdx']
+    print(trainMinIdx_val)
     #Query DB for Features data based on TraiMinIdx. This is displayed in Line Graph
     t = getTrainFeatures(trainMinIdx_val)
+    print("got Train Features")
     t = t.reset_index()
     
     trace0=go.Scatter(
@@ -197,10 +215,19 @@ def update_output( hid_anmly):
     layout = go.Layout()
     figure= go.Figure(data=data, layout=layout)  
     figure.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, 
-        hovermode='closest', legend_orientation='h')
+        hovermode='closest', legend_orientation='h',plot_bgcolor="white",)
+    figure.update_layout(legend=dict( orientation="h",yanchor="bottom",y=1.02,xanchor="right",x=1, 
+        font=dict(
+            family="WorkSans",
+            size=12,
+            color="black"
+        )))
+    print("print graph done")
     retAxleEvent = hd.currentTrainMinDF.at[indexVal,'LblAxleEvent']
     retOdoAlgo = hd.currentTrainMinDF.at[indexVal,'LblOdoAlgo']
     retSpeed = hd.currentTrainMinDF.at[indexVal,'LblSpeed']
     retExpertComment = hd.currentTrainMinDF.at[indexVal,'ExpertComment']
-    # print(retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
+    print(retAxleEvent, retOdoAlgo, retSpeed, retExpertComment)
     return figure, retAxleEvent, retOdoAlgo, retSpeed, retExpertComment
+
+
