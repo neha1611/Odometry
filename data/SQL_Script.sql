@@ -10,7 +10,7 @@ CREATE TABLE odometry.tbl_train_min_data
     probability_axle_event numeric,
     class_odo_algo VARCHAR(10),
     probability_odo_algo numeric,
-    class_speed VARCHAR(10),
+    class_speed VARCHAR(25),
     probability_speed numeric,
     
     PRIMARY KEY (train_min_idx)

@@ -87,7 +87,7 @@ layout = html.Div(
                          ),
                     dbc.Row(dbc.Col(html.Hr(), width=12, style={'padding-right':0, 'padding-lfet':0})),
                     dbc.Row([
-                        dbc.Col(dbc.Button("<",id="btn_prev_anm", 
+                        dbc.Col(dbc.Button("<",id="prev_btn", 
                             color="primary", n_clicks_timestamp=0), width=0.5,
                             align="center", className="h-50"),
                         dbc.Col(
@@ -96,7 +96,7 @@ layout = html.Div(
                                     style = {'height' : 250, 'width' : '100%'})
                                 ) ,width=11
                             ),
-                        dbc.Col(dbc.Button(">",id="btn_nxt_anm", 
+                        dbc.Col(dbc.Button(">",id="nxt_btn", 
                             color="primary", n_clicks_timestamp=0), width=0.5,
                             align="center", className="h-50")
                         ]),
@@ -187,9 +187,9 @@ layout = html.Div(
                                 dbc.Col(
                                     html.Div([
                                         dbc.ButtonGroup( 
-                                            [dbc.Button("Previous",id="prev_btn", color="primary", className="custom-font",n_clicks_timestamp=0), 
+                                            [dbc.Button("Previous",id="btn_prev_anm", color="primary", className="custom-font",n_clicks_timestamp=0), 
                                             dbc.Button("Submit Labels",id="sbmt_lbl_btn", color="primary", n_clicks_timestamp=0,className="custom-font", n_clicks=0), 
-                                            dbc.Button("Next",id="nxt_btn", color="primary", n_clicks_timestamp=0,className="custom-font")]
+                                            dbc.Button("Next",id="btn_nxt_anm", color="primary", n_clicks_timestamp=0,className="custom-font")]
                                         ),
                                         html.Div(id='clicked-button', 
                                                 children='sbmtLbl:0 sbmtLbLNxt:0 skp:0 prev:0 nxt:0 last:nan', 

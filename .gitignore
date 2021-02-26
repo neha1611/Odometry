@@ -1,4 +1,4 @@
-odometry/assets/javascript/my.js
-odometry/utils/__pycache__/query.cpython-39.pyc
-odometry/pages/home/__pycache__/home_callbacks.cpython-39.pyc
-odometry/pages/home/__pycache__/home.cpython-39.pyc
+*__pycache__*
+__pycache__/
+*.pyc
+

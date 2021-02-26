@@ -32,8 +32,9 @@ def getTrainData(trainId):
 
 def getTrainFeatures(trainMinIdx):
 	featureQuery = query_FeaturesData.format(train_min_idx = trainMinIdx)
-	# print(featureQuery)
+	print(featureQuery)
 	FeaturesData = pd.read_sql(featureQuery, engine)
+	print(FeaturesData[:5])
 	return FeaturesData
 
 def getTrainDataInRange(train_val, startDate, endDate):

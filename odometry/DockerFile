@@ -1,0 +1,16 @@
+FROM python:3.6.13-slim-buster
+
+#Make a Directory for the application
+WORKDIR ./odometry
+
+#Install Dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+#Copy all source code
+COPY . .
+
+EXPOSE 8085
+
+#Run the application
+CMD ["python","index.py"]

@@ -10,6 +10,7 @@ from app import app
 from pages.home.home_data import currentTrainMinDF,  currentTrainFeatureDF, TrainListDF
 from pages.home.home_functions import *
 
+#
 app.clientside_callback(
     output=Output('hid_timeoffset', 'children'),
     inputs=[Input('hid_body_loaded', 'children')],
@@ -38,10 +39,6 @@ def onUpdateTrain(train_val):
     data = {}
     data['train_id_val']=train_val
     data['nClicksTimestamp'] = datetime.datetime.now().timestamp()*1000
-    #Count Train Level lables
-    #TODO implement update all lables count
-    # allLblCount = len(lbldAllEvents.index)
-    # trnLblCount = len(lbldTrainEvents.index)
     jsret = json.dumps(data)
     return retMinDate, retMaxDate, jsret
 
@@ -70,7 +67,6 @@ def update_time_range(startDate, endDate, train_var, hid_offset):
     #query DB for data for Selected Train and Time Range
     hd.currentTrainMinDF  = getTrainDataInRange(train_val,startDate, endDate )
     print(hd.currentTrainMinDF[:5])
-    # print(hd.currentTrainMinDF.at[0, 'TrainMinIdx'])
     data={}
     data['start_date'] = startDate
     data['end_date'] = endDate
@@ -106,14 +102,19 @@ def update_time_range(startDate, endDate, train_var, hid_offset):
      State("rd_algo","value"),
      State("rd_speed", "value"),
      State("expert_comment", "value"),
-     State("hid_train","children")]
+     State("hid_train","children"),
+     State('prev_btn', 'disabled'),
+     State('nxt_btn', 'disabled'),
+     State('btn_prev_anm', 'disabled'),
+     State('btn_nxt_anm', 'disabled')]
 )
-def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks, 
-    prevBtn_clicks, nextBtn_clicks, hid_time_range, vars, lblAxl, lblOdo, lblSpd, exptCmt,hid_train):
-    prev_dsbl=False
-    nxt_dsbl=False
-    prev_anm_dsbl=False
-    next_anm_dsbl=False
+def updated_clicked(sbmtBtn_clicks,prevBtn_clicks, nextBtn_clicks, prevAnm_clicks, nxtAnm_clicks, 
+     hid_time_range, vars, lblAxl, lblOdo, lblSpd, 
+    exptCmt,hid_train, var_prev_dsbl, var_nxt_dsbl, var_prev_anm_dsbl, var_nxt_anm_dsbl):
+    prev_dsbl=var_prev_dsbl
+    nxt_dsbl=var_nxt_dsbl
+    prev_anm_dsbl=var_prev_anm_dsbl
+    next_anm_dsbl=var_nxt_anm_dsbl
     updateSuccess=False
     updateFailure=False
     train_val = json.loads(hid_train)['train_id_val']
@@ -126,7 +127,6 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
         if(range_nclicksTimeStamp==max_val):
             indexVal=0
             anomalyIndex=0
-            prev_dsbl=True
             prev_anm_dsbl=True
         elif sbmtBtn_clicks==max_val:
             hd.currentTrainMinDF.at[indexVal,'LblAxleEvent']=lblAxl
@@ -141,6 +141,7 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
             else:
                 updateFailure=True
         elif nxtAnm_clicks==max_val:
+            prev_anm_dsbl=False
             anomalyIndex = anomalyIndex+1
             indexVal = anomalyIndex
         elif prevAnm_clicks==max_val:
@@ -155,6 +156,7 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
             if indexVal==0:
                 prev_dsbl=False
         elif nextBtn_clicks==max_val:
+            prev_dsbl=False
             trainMinIdx = hd.currentTrainMinDF.at[indexVal,'TrainMinIdx']
             trainMinIdx = trainMinIdx+1
             indexVal = hd.currentTrainMinDF[hd.currentTrainMinDF['TrainMinIdx']==trainMinIdx].index[0]
@@ -177,10 +179,8 @@ def updated_clicked(sbmtBtn_clicks, prevAnm_clicks, nxtAnm_clicks,
     Output(component_id="rd_speed",  component_property="value"),
     Output(component_id="expert_comment",  component_property="value")],
     Input("divAnomalyIndex", "children"),#],
-    # State(component_id='hid_train', component_property='children')
 )
 def update_output( hid_anmly):
-    # train_val = json.loads(hid_train)['train_id_val']
     print("in Update Output")
     indexVal = json.loads(hid_anmly)['indexVal']
     print (indexVal)
@@ -214,7 +214,14 @@ def update_output( hid_anmly):
 
     layout = go.Layout()
     figure= go.Figure(data=data, layout=layout)  
-    figure.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, 
+    figure.update_layout(
+        xaxis={'title': 'Time(seconds)'},
+        yaxis={'title': 'Speed'},font=dict(
+            family="WorkSans",
+            size=12,
+            color="black"
+        ),
+        margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, 
         hovermode='closest', legend_orientation='h',plot_bgcolor="white",)
     figure.update_layout(legend=dict( orientation="h",yanchor="bottom",y=1.02,xanchor="right",x=1, 
         font=dict(

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dashboard
+  name: dashboard
+spec:
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+      - image: management:4567/mdp/rancher/dashfrontend:latest
+        imagePullPolicy: IfNotPresent
+        name: dashboard-container    
+        ports:
+        - containerPort: 8085
+        env:
+          - name: APP_PORT
+            value: "8085"
+          - name: APP_HOST
+            value: "127.0.0.1"
+          - name: APP_NAME
+            value: "dashboard"
+          - name: APP_DEBUG
+            value: "true"
+          - name: DEV_TOOLS_PROPS_CHECK
+            value: "true"
+          - name: POSTGRE_HOST
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRE_HOST              
+          - name: POSTGRE_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRE_DATABASE
+          - name: POSTGRE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRE_USER   
+          - name: POSTGRE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRE_PASSWORD           
+          - name: MINIO_ENDPOINT     
+            valueFrom:
+              secretKeyRef:
+                name: minio-secret
+                key: MINIO_ENDPOINT
+          - name: MINIO_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-secret
+                key: MINIO_ACCESS_KEY
+          - name: MINIO_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: minio-secret
+                key: MINIO_SECRET_KEY

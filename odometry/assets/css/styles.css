@@ -212,7 +212,7 @@ which works well instead. */
 }
 .nav-pills .nav-link.active{
     color: #fff;
-    background-color: #0062c;
+    background-color: #007bff;
 }
 .alert{
   font-family: 'Work Sans';

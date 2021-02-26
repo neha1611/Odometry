@@ -40,10 +40,10 @@ sidebar = html.Div([
                 ),
             dbc.Collapse([
                     dbc.Nav([
-                        dbc.NavLink("Edit Labels", href=home_page_location, id="page-1-link"),
-                        dbc.NavLink("Edit Labels Alternate", href=home1_page_location, id="page-1.1-link"),
-                        dbc.NavLink("Classification Performance", href=".", id="page-2-link"),
-                        dbc.NavLink("Classification Review", href=".", id="page-3-link")
+                        dbc.NavLink("Event Labeling", href=home_page_location, id="page-1-link", active="exact"),
+                        dbc.NavLink("Event Labeling Alternate", href=home1_page_location, id="page-1.1-link",active="exact"),
+                        dbc.NavLink("Classification Performance", href=".", id="page-2-link",active="exact"),
+                        dbc.NavLink("Classification Review", href=".", id="page-3-link",active="exact")
                     ],
                     vertical=True, pills=True,
                     ),
